@@ -1,0 +1,61 @@
+.btn-primary {
+  background-color: dodgerblue;
+  color: white;
+  border-block-color: dodgerblue;
+  border-radius: 0.25rem;
+}
+
+.container {
+  max-height: 90vh;
+}
+
+
+.filtros-visible {
+  max-height: calc(100vh - 450px); 
+  transition: max-height 0.3s ease;
+  overflow: auto;
+}
+
+.filtros-no-visible {
+  max-height: calc(100vh - 130px);
+  transition: max-height 0.3s ease;
+  overflow: auto;
+}
+
+.btn-peque {
+  padding-block: 0px;
+  position: center;
+  margin-top: -5%;
+  z-index: 1;
+}
+
+
+fieldset {
+  border: solid;
+  border-color: lightgrey;
+  border-radius: 25px;
+  border-width: 1px;
+  padding: 20px;
+}
+
+legend {
+  margin-bottom: 0;
+  float: initial;
+  padding: 20px;
+  width: fit-content;
+  font-size: x-large;
+  font-weight: 600;
+  color: dodgerblue
+}
+
+.noresults {
+  text-align: center;
+  color: gray;
+}
+
+.modal-header{
+    align-content:center;
+    text-align:center;
+    background-color:lightgrey;
+    padding: 0;
+}

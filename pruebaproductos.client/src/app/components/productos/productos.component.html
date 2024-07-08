@@ -1,0 +1,168 @@
+<div class="container mt-4">
+
+    <div class="row justify-content-center" *ngIf="filtrosVisible">
+        <form (ngSubmit)="buscarProductos()" class="col-md-5 p-3">
+            <fieldset class="fieldset-centrado">
+                <legend>Filtros</legend>
+                <div class="row">
+                    <!-- Primera Fila -->
+                    <div class=" col-md-4">
+                        <label for="codigo">Código:</label>
+                        <input type="text" class="form-control" id="codigo" name="codigo" [(ngModel)]="filtroCodigo">
+                    </div>
+                    <div class="form-group col-md-8">
+                        <label for="descripcion">Descripción:</label>
+                        <input type="text" class="form-control" id="descripcion" name="descripcion" maxlength="50" [(ngModel)]="filtroDescripcion">
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- Segunda Fila -->
+                    <div class="form-group col-md-4">
+                        <label for="fechaCreacion">Fecha Creación:</label>
+                        <input type="date" class="form-control" id="fechaCreacion" name="fechaCreacion" [(ngModel)]="filtroFechaCreacion">
+
+                    </div>
+                    <div class="form-group col-md-8">
+                        <label for="categoria">Categoría:</label>
+                        <input type="text" class="form-control" id="categoria" name="categoria" [(ngModel)]="filtroCategoria">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <!-- Tercera Fila -->
+                    <div class="form-group col-md-4">
+                        <label for="precioHasta">Precio:</label>
+                        <input type="number" class="form-control" id="precioHasta" name="precioHasta" [(ngModel)]="filtroPrecio">
+                    </div>
+                </div>
+                <br />
+                <div *ngIf="messageError" class="alert alert-warning">
+                    {{ messageError }}
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary m-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                        </svg>
+                        Buscar
+                    </button>
+                    <button type="button" class="btn btn-primary m-2" (click)="limpiarFiltros()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"></path>
+                        </svg>
+                        Limpiar
+                    </button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <button type="button" class="btn btn-primary btn-peque" (click)="toggleFiltros()">
+                <svg *ngIf="!filtrosVisible" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                </svg>
+                <svg *ngIf="filtrosVisible" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <!-- Botones separados de la tabla de resultados -->
+            <button type="button" class="btn btn-primary m-2" (click)="limpiarTabla()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"></path>
+                </svg>
+                Limpiar
+            </button>
+            <button type="button" class="btn btn-primary m-2" (click)="contenidoCrear()" data-bs-toggle="modal" data-bs-target="#Modal">
+                Nuevo Producto
+            </button>
+            <p style="text-align:center">mostrando {{productos.length}} resultados</p>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- TABLA DE RESULTADOS -->
+<div class="container " [ngClass]="{'filtros-visible': filtrosVisible, 'filtros-no-visible': !filtrosVisible}">
+    <div *ngIf="productos.length > 0">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Acciones</th>
+                    <th scope="col">Código</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Fecha Creacion</th>
+                    <th scope="col">Categoria</th>
+                    <th scope="col">Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let prod of productos">
+                    <td style="white-space: nowrap; width: 150px;">
+                        <!-- VER DETALLES -->
+                        <button type="button" class="btn btn-secondary btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#Modal" (click)="contenidoDetalles(prod.codigoProducto)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                            </svg>
+                        </button>
+                        <!-- EDITAR -->
+                        <button type="button" class="btn btn-primary btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#Modal" (click)="contenidoEditar(prod.codigoProducto)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"></path>
+                            </svg>
+                        </button>
+                        <!-- BORRAR -->
+                        <button type="button" class="btn btn-primary btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#Modal" (click)="contenidoBorrar(prod.codigoProducto)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"></path>
+                            </svg>
+                        </button>
+                    </td>
+
+                    <td>{{ prod.codigoProducto }}</td>
+                    <td>{{ prod.descripcionProducto }}</td>
+                    <td>{{ prod.fechaCreacion | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ prod.categoria }}</td>
+                    <td>{{ prod.precio }}</td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <h3 class="noresults" *ngIf="messageNoResults">{{messageNoResults}}</h3>
+
+</div>
+<!-- MODALS -->
+<div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <!-- Añadimos justify-content-center para centrar -->
+                <h5 class="modal-title text-center">{{titulomodal}}</h5> <!-- Añadimos text-center para centrar el texto -->
+            </div>
+            <div *ngIf="modalBorrar">
+                <div class="modal-body">
+                    <!-- Contenido del modal -->
+                    <!-- BORRAR -->
+                    <h4 style="text-align:center">¿Estas seguro de borrar el registro?</h4>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <!-- Utilizamos d-flex y justify-content-center para centrar los botones -->
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="borrar()">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
