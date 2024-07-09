@@ -9,18 +9,21 @@ import { FormsModule } from '@angular/forms';
 import { ProductosComponent } from './components/productos/productos.component';
 import { ServiceProductos } from './services/service.productos';
 import { ModalComponent } from './components/modal/modal.component';
+import { DraggableDirective } from './directives/draggable.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     ProductosComponent,
-    ModalComponent
+    ModalComponent,
+    DraggableDirective
   ],
   imports: [
     BrowserModule, HttpClientModule,
     AppRoutingModule, FormsModule
   ],
+  exports: [DraggableDirective],
   providers: [ServiceProductos],
   bootstrap: [AppComponent]
 })

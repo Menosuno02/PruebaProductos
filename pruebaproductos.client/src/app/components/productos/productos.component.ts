@@ -2,6 +2,8 @@
 import { Component } from '@angular/core';
 import { ServiceProductos } from '../../services/service.productos';
 import { Producto } from '../../models/producto';
+import { ViewChild } from '@angular/core';
+import { DraggableDirective } from '../../directives/draggable.directive';
 
 @Component({
   selector: 'app-productos',
@@ -52,6 +54,17 @@ export class ProductosComponent {
     this.messageError = null;
     this.messageNoResults = null;
   }
+
+  // Draggable
+  @ViewChild(DraggableDirective) draggableDirective!: DraggableDirective;
+
+  // Resetear la posición del modal
+  resetModalPosition() {
+    if (this.draggableDirective) {
+      this.draggableDirective.resetPosition();
+    }
+  }
+
   //Mostrar TODOS los productos al no proporcionar ningun filtro
   getProductos(): void {
     this._serviceProductos.getAllProducts().subscribe(
